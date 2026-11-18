@@ -40,13 +40,15 @@ export const registerUser = async (req, res) => {
 // Login user
 export const loginUser = async (req, res) => {
     try {
-        const { email, password } = req.body;
+        const { username, email, password } = req.body;
 
-        if (!email || !password) {
-            return res.status(400).json({ message: "Email and password are required" });
+        if ((!username && !email) || !password) {
+            return res.status(400).json({ message: "Username/Email and password are required" });
         }
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne(
+            email ? { email } : { username }
+        );
 
         if (!user) {
             return res.status(404).json({ message: "User does not exist" });
@@ -55,7 +57,7 @@ export const loginUser = async (req, res) => {
         const isPasswordValid = await bcrypt.compare(password, user.password);
 
         if (!isPasswordValid) {
-            return res.status(401).json({ message: "Invalid user credentials" });
+            return res.status(401).json({ message: "Invalid credentials" });
         }
 
         const loggedInUser = await User.findById(user._id).select("-password");

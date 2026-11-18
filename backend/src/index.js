@@ -5,9 +5,9 @@ import { PORT } from "./config/constants.js";
 connectDB()
     .then(() => {
         app.listen(PORT, () => {
-            console.log(`⚙️ Server is running at port : ${PORT}`);
+            console.log(`Server is running on port: ${PORT}`);
         });
     })
     .catch((err) => {
-        console.log("MONGO db connection failed !!! ", err);
+        console.log("MongoDB connection failed: ", err);
     });
